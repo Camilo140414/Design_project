@@ -1,0 +1,52 @@
+
+import machine
+import time
+
+# Configuración del pin y PWM
+pwm_pin = machine.Pin(4)
+pwm = machine.PWM(pwm_pin)
+pwm.freq(1000)
+
+# Valores base
+duty = 0
+max_duty = 1023
+step = 5
+cambio_abrupto = 150  # intensidad del cambio abrupto
+espera = 0.01
+contador = 0
+
+while True:
+    # Aumenta poco a poco
+    duty += step
+    if duty > max_duty:
+        duty = max_duty
+
+    pwm.duty(duty)
+    time.sleep(espera)
+
+    # Cada cierto número de pasos, hacer cambio abrupto
+    contador += 1
+    if contador == 10:
+        # Cambio abrupto HACIA ABAJO
+        duty -= cambio_abrupto
+        if duty < 0:
+            duty = 0
+        pwm.duty(duty)
+        time.sleep(0.02)
+
+    elif contador == 20:
+        # Cambio abrupto HACIA ARRIBA
+        duty += cambio_abrupto
+        if duty > max_duty:
+            duty = max_duty
+        pwm.duty(duty)
+        time.sleep(0.02)
+        contador = 0
+
+    #  Reiniciar cuando llegue al 100%
+    if duty >= max_duty:
+        time.sleep(1)  # pequeña pausa antes de reiniciar
+        duty = 0
+        contador = 0
+        pwm.duty(duty)
+        time.sleep(0.05)

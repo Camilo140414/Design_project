@@ -1,0 +1,23 @@
+
+import machine
+import time
+
+# Configuración del pin y PWM
+pwm_pin = machine.Pin(4)  # Pin 4 de la placa
+pwm = machine.PWM(pwm_pin)  # Configura el pin para PWM
+pwm.freq(1000)  # Frecuencia del PWM
+pwm.duty(0)  # Inicializa el ciclo de trabajo en 0%
+
+max_duty = 1023  # Valor máximo del ciclo de trabajo (100%)
+step = 10  # Incremento en cada paso
+delay = 0.01  # Tiempo de espera entre cada cambio
+
+while True:
+    # Subida del ciclo de trabajo
+    for duty in range(0, max_duty + 1, step):
+        pwm.duty(duty)
+        time.sleep(delay)
+
+    # Cuando llegue a 100%, reinicia a 0% y hace una pausa
+    pwm.duty(0)  # Reinicia el ciclo de trabajo a 0%
+    time.sleep(0.2)  # Espera antes de empezar el siguiente ciclo

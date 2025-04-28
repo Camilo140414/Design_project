@@ -1,0 +1,28 @@
+
+import machine
+import time
+
+# Configuración del pin y PWM
+pwm_pin = machine.Pin(4)
+pwm = machine.PWM(pwm_pin)
+pwm.freq(1000)
+pwm.duty(0)
+
+# Valores base
+max_duty = 1023
+step = 10
+delay = 0.01
+
+while True:
+    # Subida
+    for duty in range(0, max_duty + 1, step):
+        pwm.duty(duty)
+        time.sleep(delay)
+
+    # Bajada
+    for duty in range(max_duty, -1, -step):
+        pwm.duty(duty)
+        time.sleep(delay)
+
+    # Espera entre ciclos
+    time.sleep(0.3)
